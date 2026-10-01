@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ML for Business — samshomelab.dev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ── Simpson College: Red #C8102E · Gold #E8A800 ── */
+    :root {
+      --bg:       #080101;
+      --s1:       #130304;
+      --s2:       #1C0507;
+      --s3:       #25080B;
+      --border:   #3D0C12;
+      --border2:  #5E1720;
+      --gold:     #E8A800;
+      --gold-d:   rgba(232,168,0,0.11);
+      --red:      #C8102E;
+      --red-d:    rgba(200,16,46,0.11);
+      --green:    #34D399;
+      --amber:    #FBBF24;
+      --err:      #F87171;
+      --t1:       #F5EAEB;
+      --t2:       #C4A0A8;
+      --t3:       #7A4E56;
+      --font-d:   'Space Grotesk', system-ui, sans-serif;
+      --font-m:   'IBM Plex Mono', 'Courier New', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--t1);
+      font-family: var(--font-d);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 100;
+      background: rgba(8,1,1,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--font-m);
+      font-size: 13px;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--t3);
+      text-decoration: none;
+      transition: color 0.18s;
+    }
+    .nav-links a:hover { color: var(--t1); }
+
+    /* ─── Container ─── */
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 80px 0 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -120px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(232,168,0,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -80px;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(200,16,46,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.07em;
+      margin-bottom: 22px;
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--gold);
+    }
+    h1 {
+      font-size: clamp(34px, 6vw, 62px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.08;
+      max-width: 820px;
+      margin-bottom: 22px;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--t2);
+      max-width: 540px;
+      line-height: 1.75;
+      margin-bottom: 36px;
+      font-weight: 400;
+    }
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--t2);
+      background: var(--s1);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+    }
+    .chip-school {
+      color: var(--gold);
+      border-color: rgba(232,168,0,0.28);
+      background: var(--gold-d);
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2.4s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.3; }
+    }
+
+    /* ─── Section Rule ─── */
+    .rule { border: none; border-top: 1px solid var(--border); }
+
+    /* ─── Section shell ─── */
+    .section { padding: 64px 0; }
+    .section-label {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--t3);
+      letter-spacing: 0.07em;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    /* ─── Steps accordion ─── */
+    .step {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 4px;
+      overflow: hidden;
+      transition: border-color 0.18s;
+      background: var(--s1);
+    }
+    .step:hover { border-color: var(--border2); }
+    .step.open  { border-color: var(--border2); }
+
+    .step-hd {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      color: var(--t1);
+      font-family: var(--font-d);
+    }
+    .step-num {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--t3);
+      min-width: 22px;
+    }
+    .step-name { flex: 1; font-size: 15px; font-weight: 600; }
+    .step-badge {
+      font-family: var(--font-m);
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: 3px;
+      background: var(--gold-d);
+      color: var(--gold);
+      border: 1px solid rgba(232,168,0,0.22);
+      white-space: nowrap;
+    }
+    .step-arr {
+      font-size: 11px;
+      color: var(--t3);
+      transition: transform 0.18s;
+    }
+    .step.open .step-arr { transform: rotate(90deg); }
+
+    .step-bd {
+      display: none;
+      padding: 4px 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .step.open .step-bd { display: block; }
+    .step-bd p {
+      font-size: 14px;
+      color: var(--t2);
+      line-height: 1.75;
+      margin-top: 14px;
+    }
+    .step-bd p + p { margin-top: 10px; }
+
+    pre.cb {
+      margin-top: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14px 16px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      color: var(--t2);
+      line-height: 1.65;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    pre.cb .kw  { color: var(--gold); }
+    pre.cb .str { color: #86efac; }
+    pre.cb .cm  { color: var(--t3); }
+
+    /* ─── Demo panel ─── */
+    .panel {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 13px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--t3);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: var(--font-d);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab-btn:hover { color: var(--t2); }
+    .tab-btn.on {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-pane { display: none; padding: 24px; }
+    .tab-pane.on { display: block; }
+
+    .pane-desc {
+      font-size: 13px;
+      color: var(--t3);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    textarea.inp {
+      width: 100%;
+      min-height: 120px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--t1);
+      font-family: var(--font-d);
+      font-size: 14px;
+      padding: 12px 14px;
+      resize: vertical;
+      line-height: 1.65;
+      transition: border-color 0.18s;
+    }
+    textarea.inp:focus { outline: none; border-color: var(--gold); }
+    textarea.inp::placeholder { color: var(--t3); }
+
+    .pane-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-run {
+      background: var(--gold);
+      color: #080101;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-family: var(--font-d);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+    .btn-run:hover:not(:disabled) { opacity: 0.82; }
+    .btn-run:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    .btn-clr {
+      background: transparent;
+      color: var(--t3);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-family: var(--font-d);
+      font-size: 13px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-clr:hover { color: var(--t1); border-color: var(--border2); }
+
+    .pane-status {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--t3);
+      margin-left: auto;
+    }
+
+    .out-box {
+      display: none;
+      margin-top: 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .out-box.show { display: block; }
+    .out-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .out-label {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .out-time {
+      font-family: var(--font-m);
+      font-size: 10px;
+      color: var(--t3);
+    }
+    .out-body {
+      padding: 14px;
+      font-size: 14px;
+      color: var(--t2);
+      line-height: 1.75;
+      white-space: pre-wrap;
+      min-height: 60px;
+    }
+    .out-body strong { color: var(--t1); font-weight: 600; }
+
+    .spin {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .spin span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: bounce 1.3s ease-in-out infinite;
+    }
+    .spin span:nth-child(2) { animation-delay: 0.22s; }
+    .spin span:nth-child(3) { animation-delay: 0.44s; }
+    @keyframes bounce {
+      0%,80%,100% { transform: scale(0.6); opacity: 0.35; }
+      40%          { transform: scale(1);   opacity: 1; }
+    }
+
+    .out-err { color: var(--err); font-family: var(--font-m); font-size: 12px; }
+
+    /* ─── Pain points ─── */
+    .pain-intro {
+      font-size: 15px;
+      color: var(--t2);
+      max-width: 620px;
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+    .pain {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      border-radius: 0 6px 6px 0;
+      padding: 16px 18px;
+    }
+    .pain h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .pain p  { font-size: 13px; color: var(--t3); line-height: 1.65; }
+    .pain-bridge {
+      margin-top: 22px;
+      font-size: 14px;
+      color: var(--gold);
+      max-width: 620px;
+    }
+
+    /* ─── Example chips, notes, risk badge, agent status ─── */
+    .examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .examples-label { font-size: 12px; color: var(--t3); margin-right: 2px; }
+    .ex-btn {
+      background: var(--s2);
+      color: var(--t2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-family: var(--font-d);
+      font-size: 12px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .ex-btn:hover { color: var(--t1); border-color: var(--gold); }
+
+    .demo-note { margin-top: 12px; font-size: 12px; color: var(--t3); line-height: 1.6; max-width: 640px; }
+
+    .tier {
+      display: none;
+      align-items: center;
+      font-family: var(--font-m);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+    .tier.show { display: inline-flex; }
+    .tier-Low      { color: var(--green); border-color: rgba(52,211,153,0.4);  background: rgba(52,211,153,0.08); }
+    .tier-Moderate { color: var(--amber); border-color: rgba(251,191,36,0.4);  background: rgba(251,191,36,0.08); }
+    .tier-High     { color: #FB923C;      border-color: rgba(251,146,60,0.45); background: rgba(251,146,60,0.09); }
+    .tier-Critical { color: var(--err);   border-color: rgba(248,113,113,0.5); background: rgba(248,113,113,0.1); }
+
+    .chip.wait .dot { background: var(--amber); }
+    .chip.off  .dot { background: var(--err); animation: none; }
+
+    button:focus-visible, textarea:focus-visible, a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    /* ─── Architecture cards ─── */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    .arch-card {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .arch-icon { font-size: 20px; margin-bottom: 12px; display: block; }
+    .arch-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 7px; }
+    .arch-card p  { font-size: 13px; color: var(--t3); line-height: 1.6; }
+
+    /* ─── School banner ─── */
+    .school-banner {
+      background: var(--s1);
+      border: 1px solid rgba(232,168,0,0.22);
+      border-radius: 6px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+    .school-crest {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .school-info h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 3px;
+    }
+    .school-info p {
+      font-size: 12px;
+      color: var(--t3);
+      font-family: var(--font-m);
+      letter-spacing: 0.03em;
+    }
+
+    /* ─── Skill badges ─── */
+    .badge-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+    .badge {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--red);
+      background: var(--red-d);
+      border: 1px solid rgba(200,16,46,0.25);
+      padding: 5px 12px;
+      border-radius: 3px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer p {
+      font-family: var(--font-m);
+      font-size: 12px;
+      color: var(--t3);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+    .footer-sc {
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--t3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      display: inline-block;
+    }
+    .sc-dot-gold {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .hero { padding: 52px 0 44px; }
+      .section { padding: 48px 0; }
+      .nav-links { display: none; }
+      h1 { letter-spacing: -0.018em; }
+      .school-banner { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ Nav ═══ -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://samshomelab.dev">samshomelab.dev</a>
+    <ul class="nav-links">
+      <li><a href="#summary">Build Summary</a></li>
+      <li><a href="#pain">The Problem</a></li>
+      <li><a href="#demo">Live Demo</a></li>
+      <li><a href="#arch">Architecture</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ═══ Hero ═══ -->
+  <header class="hero">
+    <div class="eyebrow">ML for Business · Proof of Skill</div>
+    <h1>An AI agent that turns<br>raw business data into<br><em>clear decisions</em></h1>
+    <p class="hero-sub">Built by King to show how a large language model can help a senior health insurer decide which members need care first, plus three other business tools. It runs on a free, open-source model behind a Flask backend.</p>
+    <div class="chips">
+      <div class="chip wait" id="agent-chip"><span class="dot"></span><span id="agent-chip-text">Checking agent…</span></div>
+      <div class="chip chip-school">⚡ Simpson College · Indianola, IA</div>
+      <div class="chip">Ollama · open-source LLM</div>
+      <div class="chip">HTML · CSS · JS · Flask</div>
+    </div>
+  </header>
+
+  <hr class="rule">
+
+  <!-- ═══ Build Summary ═══ -->
+  <section class="section" id="summary">
+    <div class="section-label">Build Summary — Step by Step</div>
+
+    <!-- Simpson College Context Banner -->
+    <div class="school-banner">
+      <div class="school-crest">🌩️</div>
+      <div class="school-info">
+        <h3>Simpson College — The Storm</h3>
+        <p>Indianola, Iowa · Founded 1860 · CIS Program · Computer Information Systems</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <button class="step-hd" onclick="tog(this)">
+        <span class="step-num">01</span>
+        <span class="step-name">Problem Framing</span>
+        <span class="step-badge">Strategy</span>
+        <span class="step-arr">▶</span>
+      </button>
+      <div class="step-bd">
+        <p>Businesses generate enormous volumes of unstructured data — customer reviews, meeting notes, KPI sheets, market reports. Traditional ML requires labeled datasets, compute infrastructure, and training time. The insight driving this project: a pre-trained large language model handles language understanding out of the box. The engineering work becomes task definition and prompt architecture, not model training.</p>
+        <p>This project demonstrates four core business ML capabilities that would otherwise require four separate models, four data pipelines, and months of labeled training data.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <button class="step-hd" onclick="tog(this)">
+        <span class="step-num">02</span>
+        <span class="step-name">Model Selection</span>
+        <span class="step-badge">Architecture Decision</span>
+        <span class="step-arr">▶</span>
+      </button>
+      <div class="step-bd">
+        <p>Selected an open-source model served by Ollama (Llama 3.2 by default) instead of a paid API. Three reasons: it costs nothing per request, anyone can run it on their own hardware, and sensitive inputs never leave the server. The trade-off is that smaller models follow instructions less reliably than frontier models, so the prompts are short, explicit, and structured, and the model can be swapped with one environment variable.</p>
+        <pre class="cb"><span class="cm"># Core model call: Flask streams Ollama's response to the browser</span>
+requests.post(<span class="str">"http://localhost:11434/api/chat"</span>, stream=<span class="kw">True</span>, json={
+    <span class="str">"model"</span>:    OLLAMA_MODEL,        <span class="cm"># e.g. "llama3.2:3b"</span>
+    <span class="str">"stream"</span>:   <span class="kw">True</span>,
+    <span class="str">"messages"</span>: [
+        {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: PROMPTS[module]},  <span class="cm"># role + output format</span>
+        {<span class="str">"role"</span>: <span class="str">"user"</span>,   <span class="str">"content"</span>: user_input},
+    ],
+    <span class="str">"options"</span>:  {<span class="str">"temperature"</span>: 0.3, <span class="str">"num_predict"</span>: 800},
+})</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <button class="step-hd" onclick="tog(this)">
+        <span class="step-num">03</span>
+        <span class="step-name">Prompt Engineering</span>
+        <span class="step-badge">Core Skill</span>
+        <span class="step-arr">▶</span>
+      </button>
+      <div class="step-bd">
+        <p>Each business capability is powered by a dedicated system prompt. This is the real engineering work in an LLM-based system: scoping the agent's role, defining input expectations, and specifying the output structure. A well-engineered prompt produces consistent, structured outputs without any model training or labeled data.</p>
+        <pre class="cb"><span class="cm"># Senior health risk scanner — system prompt architecture</span>
+<span class="str">"You are a senior-health risk analyst for a health insurer
+covering members aged 65 and older.
+
+RISK TIER: [Low / Moderate / High / Critical] - why.
+TOP RISK DRIVERS: 4 drivers, each with likelihood and impact.
+COST AND CLAIMS PAIN POINTS: where avoidable cost is likely.
+CARE MANAGEMENT OPPORTUNITIES: 3 interventions and their benefit.
+COMPLIANCE NOTE: supports outreach, not coverage or pricing.
+NEXT STEPS: 3 actions for the care team this week.
+
+Use only facts from the input. If not stated, say so."</span></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <button class="step-hd" onclick="tog(this)">
+        <span class="step-num">04</span>
+        <span class="step-name">Four Business Capability Modules</span>
+        <span class="step-badge">Build</span>
+        <span class="step-arr">▶</span>
+      </button>
+      <div class="step-bd">
+        <p>Built four independent modules targeting the most common business ML use cases. Each module has its own system prompt, example inputs, and interface panel. They share one API integration layer — demonstrating that a single well-architected LLM integration can power multiple specialized business functions.</p>
+        <p><strong>Sentiment Analysis</strong> — customer feedback → scored sentiment, themes, action items<br>
+        <strong>Report Generator</strong> — raw data/notes → structured executive summary<br>
+        <strong>Senior Health Risk Scanner</strong> — member profile or member group → risk tier, cost pain points, care-management moves (the featured demo)<br>
+        <strong>KPI Narrative</strong> — raw metrics → plain-English story for stakeholders</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <button class="step-hd" onclick="tog(this)">
+        <span class="step-num">05</span>
+        <span class="step-name">Interface Design &amp; Frontend Build</span>
+        <span class="step-badge">Frontend</span>
+        <span class="step-arr">▶</span>
+      </button>
+      <div class="step-bd">
+        <p>Built zero-dependency — HTML, CSS, vanilla JavaScript. Tabbed navigation, streamed model responses with loading states, live error handling, and full mobile responsiveness. No framework needed at this scope. Styled in Simpson College's official Red and Gold to make it feel like a project that belongs here — the color palette reflects my school and my home.</p>
+        <p>State is managed in plain JS. Each capability runs independently, preserving inputs and outputs across tab switches.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <button class="step-hd" onclick="tog(this)">
+        <span class="step-num">06</span>
+        <span class="step-name">Backend &amp; Deployment</span>
+        <span class="step-badge">Engineering</span>
+        <span class="step-arr">▶</span>
+      </button>
+      <div class="step-bd">
+        <p>The browser never talks to the model directly. It posts a module name and some text to Flask, which holds the prompts, validates the request, rate-limits each visitor, caps how many generations run at once, and streams the answer back from Ollama running on localhost. That keeps the model port private and the demo free for anyone to use.</p>
+        <p>Next steps for a real deployment: authentication, response caching, an audit log, and connecting the agent to claims and enrollment data instead of pasted text.</p>
+        <pre class="cb"><span class="cm"># Flask route: the only thing the browser can reach</span>
+<span class="kw">@app</span>.post(<span class="str">"/api/analyze"</span>)
+<span class="kw">def</span> analyze():
+    body = request.get_json(silent=<span class="kw">True</span>) <span class="kw">or</span> {}
+    <span class="kw">if</span> body.get(<span class="str">"module"</span>) <span class="kw">not in</span> PROMPTS:       <span class="cm"># known modules only</span>
+        <span class="kw">return</span> jsonify(error=<span class="str">"Unknown module."</span>), 400
+    <span class="kw">if</span> rate_limited(request.remote_addr):        <span class="cm"># 6 requests per IP per minute</span>
+        <span class="kw">return</span> jsonify(error=<span class="str">"Too many requests."</span>), 429
+    <span class="kw">if not</span> _slots.acquire(blocking=<span class="kw">False</span>):      <span class="cm"># cap simultaneous runs</span>
+        <span class="kw">return</span> jsonify(error=<span class="str">"Agent is busy."</span>), 503
+    <span class="kw">return</span> Response(stream_with_context(stream_from_ollama(...)),
+                    mimetype=<span class="str">"text/plain"</span>)</pre>
+      </div>
+    </div>
+
+  </section>
+
+  <hr class="rule">
+
+  <!-- ═══ The Problem ═══ -->
+  <section class="section" id="pain">
+    <div class="section-label">The problem — senior health insurance</div>
+    <p class="pain-intro">Members 65 and older use more care than any other group, and a small share of them account for a large share of claims. Most of that cost builds up quietly before it becomes a crisis. These are the problems the risk scanner is built around.</p>
+    <div class="pain-grid">
+      <div class="pain">
+        <h3>Preventable readmissions</h3>
+        <p>A hospital discharge without follow-up often ends in a return trip. Every avoidable readmission is a large claim and a worse outcome for the member.</p>
+      </div>
+      <div class="pain">
+        <h3>Falls</h3>
+        <p>One fall can mean surgery, rehab, and a long decline. Many are preventable with a medication review and a few changes at home.</p>
+      </div>
+      <div class="pain">
+        <h3>Too many medications</h3>
+        <p>Members on many drugs from several prescribers face interactions that nobody is watching across the whole list.</p>
+      </div>
+      <div class="pain">
+        <h3>Chronic conditions slipping</h3>
+        <p>Diabetes, heart failure, and COPD cost far less when managed steadily and far more after a crisis. Missed appointments are the early warning.</p>
+      </div>
+      <div class="pain">
+        <h3>Isolation and access</h3>
+        <p>Members who live alone, lose transportation, or stop going to appointments often show up in claims only after something goes wrong.</p>
+      </div>
+      <div class="pain">
+        <h3>Too many members, too few nurses</h3>
+        <p>Care teams can't call everyone. They need a ranked list of who to call first and why.</p>
+      </div>
+    </div>
+    <p class="pain-bridge">The scanner below turns a plain-language description into that ranked, explained starting point.</p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ═══ Live Demo ═══ -->
+  <section class="section" id="demo">
+    <div class="section-label">Live agent demo — senior health risk scanner</div>
+
+    <div class="panel">
+      <div class="tabs">
+        <button class="tab-btn on"  onclick="tab(this,'risk')">Senior Health Risk</button>
+        <button class="tab-btn"     onclick="tab(this,'sentiment')">Sentiment Analysis</button>
+        <button class="tab-btn"     onclick="tab(this,'report')">Report Generator</button>
+        <button class="tab-btn"     onclick="tab(this,'kpi')">KPI Narrative</button>
+      </div>
+
+      <!-- ── Senior Health Risk Scan ── -->
+      <div class="tab-pane on" id="tp-risk">
+        <p class="pane-desc">Describe one senior member or a group of members. The agent rates the risk, names the cost problems it expects, and suggests which care-management steps to take first.</p>
+        <div class="examples">
+          <span class="examples-label">Try an example:</span>
+          <button class="ex-btn" onclick="useEx('risk',0)">Recent hospital discharge</button>
+          <button class="ex-btn" onclick="useEx('risk',1)">Rural member group</button>
+          <button class="ex-btn" onclick="useEx('risk',2)">Healthy but isolated</button>
+        </div>
+        <textarea class="inp" id="in-risk" maxlength="3000" placeholder="Describe a fictional member or member group…
+
+Include conditions, medications, recent hospital stays, falls, living situation, and access to care."></textarea>
+        <div class="pane-row">
+          <button class="btn-run" onclick="run('risk')">Scan senior health risk</button>
+          <button class="btn-clr" onclick="clr('risk')">Clear</button>
+          <span class="pane-status" id="st-risk"></span>
+        </div>
+        <p class="demo-note">Demo only. Use fictional scenarios and don't enter real member or patient information. Results are not medical advice and shouldn't drive coverage or pricing decisions.</p>
+        <div class="out-box" id="ob-risk">
+          <div class="out-hd">
+            <span class="out-label">Senior Health Risk Scan</span>
+            <span class="tier" id="tier-risk"></span>
+            <span class="out-time" id="ot-risk"></span>
+          </div>
+          <div class="out-body" id="or-risk" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- ── Sentiment Analysis ── -->
+      <div class="tab-pane" id="tp-sentiment">
+        <p class="pane-desc">Paste customer feedback, reviews, or survey responses. The agent identifies overall sentiment, key themes, pain points, and action items for the business team.</p>
+        <textarea class="inp" id="in-sentiment" maxlength="3000" placeholder="Paste customer feedback here…
+
+Example: 'The onboarding was smooth and the dashboard is intuitive, but response times from support have been really frustrating. We had an outage last week that took 4 hours to resolve with no communication from the team whatsoever. The product itself is great but we are reconsidering the renewal because of support.'"></textarea>
+        <div class="pane-row">
+          <button class="btn-run" onclick="run('sentiment')">Analyze Feedback</button>
+          <button class="btn-clr" onclick="clr('sentiment')">Clear</button>
+          <span class="pane-status" id="st-sentiment"></span>
+        </div>
+        <div class="out-box" id="ob-sentiment">
+          <div class="out-hd">
+            <span class="out-label">Sentiment Analysis</span>
+            <span class="out-time" id="ot-sentiment"></span>
+          </div>
+          <div class="out-body" id="or-sentiment" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- ── Executive Report ── -->
+      <div class="tab-pane" id="tp-report">
+        <p class="pane-desc">Enter raw data points, bullet notes, or meeting minutes. The agent produces a polished executive business report ready for stakeholder review.</p>
+        <textarea class="inp" id="in-report" maxlength="3000" placeholder="Enter raw data or notes…
+
+Example: 'Q3 revenue: $2.1M (+12% YoY). Churn rate increased to 8.2% (up from 6.1%). Top performing region: Southeast (+23%). New enterprise deals: 4 signed, 3 pending. Product NPS: 41. Support tickets up 31% following new feature rollout. Engineering headcount: 12. Hiring freeze in effect.'"></textarea>
+        <div class="pane-row">
+          <button class="btn-run" onclick="run('report')">Generate Report</button>
+          <button class="btn-clr" onclick="clr('report')">Clear</button>
+          <span class="pane-status" id="st-report"></span>
+        </div>
+        <div class="out-box" id="ob-report">
+          <div class="out-hd">
+            <span class="out-label">Executive Report</span>
+            <span class="out-time" id="ot-report"></span>
+          </div>
+          <div class="out-body" id="or-report" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- ── KPI Narrative ── -->
+      <div class="tab-pane" id="tp-kpi">
+        <p class="pane-desc">Paste a list of KPIs and metrics. The agent writes a plain-English narrative explaining what the numbers mean and where leadership should focus.</p>
+        <textarea class="inp" id="in-kpi" maxlength="3000" placeholder="Enter your KPIs…
+
+Example: 'DAU: 4,200 (-5% WoW). MAU: 28,000 (+8% MoM). Conversion rate: 3.1% (target: 4%). ARPU: $42. CAC: $180. LTV: $520. LTV:CAC ratio: 2.9. Churn: 2.8%. New feature adoption (dashboard v2): 38%. Support CSAT: 3.2/5.'"></textarea>
+        <div class="pane-row">
+          <button class="btn-run" onclick="run('kpi')">Narrate Metrics</button>
+          <button class="btn-clr" onclick="clr('kpi')">Clear</button>
+          <span class="pane-status" id="st-kpi"></span>
+        </div>
+        <div class="out-box" id="ob-kpi">
+          <div class="out-hd">
+            <span class="out-label">KPI Narrative</span>
+            <span class="out-time" id="ot-kpi"></span>
+          </div>
+          <div class="out-body" id="or-kpi" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ═══ Architecture ═══ -->
+  <section class="section" id="arch">
+    <div class="section-label">How the Agent Works</div>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <span class="arch-icon">⌨️</span>
+        <h3>User Input</h3>
+        <p>Business data — feedback, metrics, notes — entered via the browser. No preprocessing, database, or login required.</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-icon">🧠</span>
+        <h3>Prompt Layer</h3>
+        <p>A task-specific system prompt defines the agent's role, output format, and tone. It lives on the server, so visitors can't change it.</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-icon">🔌</span>
+        <h3>Flask + Ollama</h3>
+        <p>Flask validates the request and streams it to an open-source model running on the same server. No API key and no per-call cost.</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-icon">📊</span>
+        <h3>Structured Output</h3>
+        <p>The response streams into the output panel as the model writes it. In production, this parses to JSON and feeds dashboards or downstream tools.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 48px;">
+      <div class="section-label" style="margin-bottom: 16px;">Skills Demonstrated in This Project</div>
+      <div class="badge-wrap">
+        <span class="badge">API Integration</span>
+        <span class="badge">Prompt Engineering</span>
+        <span class="badge">Agent Architecture</span>
+        <span class="badge">JavaScript async/await</span>
+        <span class="badge">HTML &amp; CSS</span>
+        <span class="badge">LLM System Design</span>
+        <span class="badge">UI/UX Design</span>
+        <span class="badge">Python / Flask</span>
+        <span class="badge">Ollama / Open-Source LLMs</span>
+        <span class="badge">Streaming Responses</span>
+        <span class="badge">Rate Limiting</span>
+        <span class="badge">Error Handling</span>
+        <span class="badge">Business Intelligence</span>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="footer-inner">
+    <p>Built by King &nbsp;·&nbsp; <a href="https://samshomelab.dev">samshomelab.dev</a> &nbsp;·&nbsp; ML for Business</p>
+    <div class="footer-sc">
+      <span class="sc-dot"></span>
+      <span class="sc-dot-gold"></span>
+      Simpson College · Indianola, Iowa · Est. 1860
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Prompts live on the server (prompts.py). The browser sends only a module name and the user's text. */
+
+const ERR = '\u001eERROR:';   // must match SENTINEL_ERROR in app.py
+
+const EX = {
+  risk: [
+    `Member (fictional): woman, age 81. Congestive heart failure and type 2 diabetes. Discharged 9 days ago after a 5-day hospital stay for fluid overload. Takes 11 prescriptions from three different prescribers. Fell twice in the last six months. Lives alone in a rural area, about 40 minutes from the nearest cardiologist. Missed her last two primary care appointments.`,
+    `Group (fictional): Medicare Advantage members aged 75 and older in two rural Iowa counties, 4,200 people. 30-day readmissions rose from 14% to 19% over the last two quarters. Fall-related ER visits are up 22% year over year. About 31% of members take 8 or more medications. Only 38% completed an annual wellness visit. The care management team has 9 nurses.`,
+    `Member (fictional): man, age 68, newly enrolled. No chronic conditions and one blood pressure prescription. Widower, lives alone, no family nearby, stopped driving last month. Has skipped his annual wellness visit twice. Recently reported trouble hearing and occasional dizziness when standing up.`
+  ]
+};
+
+/* ─── Agent status chip ─── */
+async function checkAgent() {
+  const chip = document.getElementById('agent-chip');
+  const txt  = document.getElementById('agent-chip-text');
+  try {
+    const res = await fetch('/api/health');
+    const d   = await res.json();
+    chip.classList.remove('wait');
+    chip.classList.toggle('off', !d.ok);
+    txt.textContent = d.ok ? 'Agent live' : 'Agent offline';
+    chip.title = d.ok ? 'Model: ' + d.model : d.detail;
+  } catch (e) {
+    chip.classList.remove('wait');
+    chip.classList.add('off');
+    txt.textContent = 'Agent offline';
+    chip.title = 'Cannot reach the server.';
+  }
+}
+checkAgent();
+setInterval(checkAgent, 60000);
+
+/* ─── Tab switching ─── */
+function tab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tp-' + id).classList.add('on');
+}
+
+/* ─── Step accordion ─── */
+function tog(btn) {
+  const step = btn.closest('.step');
+  const wasOpen = step.classList.contains('open');
+  document.querySelectorAll('.step.open').forEach(s => s.classList.remove('open'));
+  if (!wasOpen) step.classList.add('open');
+}
+
+/* ─── Example inputs ─── */
+function useEx(cap, i) {
+  const ta = document.getElementById('in-' + cap);
+  ta.value = EX[cap][i];
+  ta.focus();
+}
+
+/* ─── Rendering: escape first, then bold section labels ─── */
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function render(text) {
+  return text.split('\n').map(raw => {
+    // Small models sometimes add markdown anyway; tidy it.
+    const line = raw.replace(/^#{1,6}\s*/, '').replace(/^\s*[*-]\s+/, '• ');
+    return esc(line)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^([A-Z][A-Z0-9 &;'\/-]{2,48}):/, '<strong>$1:</strong>');
+  }).join('\n');
+}
+
+/* ─── Risk tier badge ─── */
+function setTier(text) {
+  const el = document.getElementById('tier-risk');
+  const m = text.match(/RISK TIER:\s*\[?\s*(Low|Moderate|Medium|High|Critical)/i);
+  if (!m) { el.classList.remove('show'); return; }
+  let t = m[1][0].toUpperCase() + m[1].slice(1).toLowerCase();
+  if (t === 'Medium') t = 'Moderate';
+  el.className = 'tier show tier-' + t;
+  el.textContent = t + ' risk';
+}
+
+/* ─── Run agent (streams from Flask) ─── */
+async function run(cap) {
+  const input = document.getElementById('in-' + cap).value.trim();
+  if (!input) { setst(cap, 'Enter some text first.'); return; }
+
+  const ob  = document.getElementById('ob-' + cap);
+  const or_ = document.getElementById('or-' + cap);
+  const ot  = document.getElementById('ot-' + cap);
+  const st  = document.getElementById('st-' + cap);
+  const btn = document.querySelector(`#tp-${cap} .btn-run`);
+  if (btn.disabled) return;
+
+  btn.disabled = true;
+  st.textContent = 'Running…';
+  ob.classList.add('show');
+  or_.innerHTML = '<div class="spin"><span></span><span></span><span></span></div>';
+  ot.textContent = '';
+  if (cap === 'risk') setTier('');
+
+  const t0 = Date.now();
+  let text = '';
+  try {
+    let res;
+    try {
+      res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ module: cap, input })
+      });
+    } catch (netErr) {
+      throw new Error("Can't reach the server. Try again in a moment.");
+    }
+
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error || `Server error (${res.status})`);
+    }
+
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let errMsg = '';
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += dec.decode(value, { stream: true });
+      const i = text.indexOf(ERR);
+      const shown = i >= 0 ? text.slice(0, i) : text;
+      if (shown) {
+        st.textContent = 'Writing…';
+        or_.innerHTML = render(shown);
+        if (cap === 'risk') setTier(shown);
+      }
+    }
+    const i = text.indexOf(ERR);
+    if (i >= 0) { errMsg = text.slice(i + ERR.length).trim(); text = text.slice(0, i); }
+
+    if (errMsg && !text.trim()) throw new Error(errMsg);
+    if (!text.trim()) throw new Error('The model returned nothing. Try again.');
+
+    or_.innerHTML = render(text) + (errMsg ? `\n\n<span class="out-err">${esc(errMsg)}</span>` : '');
+    ot.textContent = ((Date.now() - t0) / 1000).toFixed(1) + 's';
+    st.textContent = errMsg ? 'Stopped early' : 'Done';
+    setTimeout(() => { st.textContent = ''; }, 2500);
+
+  } catch (err) {
+    or_.innerHTML = `<span class="out-err">${esc(err.message)}</span>`;
+    st.textContent = 'Failed';
+    checkAgent();
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ─── Clear ─── */
+function clr(cap) {
+  document.getElementById('in-' + cap).value = '';
+  document.getElementById('ob-' + cap).classList.remove('show');
+  document.getElementById('st-' + cap).textContent = '';
+  if (cap === 'risk') setTier('');
+}
+
+function setst(cap, msg) {
+  const el = document.getElementById('st-' + cap);
+  el.textContent = msg;
+  setTimeout(() => { el.textContent = ''; }, 2500);
+}
+
+/* ─── Ctrl/Cmd + Enter runs the active agent ─── */
+document.querySelectorAll('textarea.inp').forEach(t => {
+  t.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') run(t.id.slice(3));
+  });
+});
+</script>
+</body>
+</html>
