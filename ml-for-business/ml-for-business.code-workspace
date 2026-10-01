@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "⚡ ML for Business — samshomelab.dev",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "workbench.startupEditor": "readme",
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+      "*.html": "${capture}.css, ${capture}.js",
+      "README.md": "LICENSE, CHANGELOG.md, .gitignore"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ritwickdey.LiveServer",
+      "esbenp.prettier-vscode",
+      "eamodio.gitlens",
+      "ms-python.python",
+      "humao.rest-client"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": []
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": []
+  }
+}
