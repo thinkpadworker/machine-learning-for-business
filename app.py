@@ -59,7 +59,7 @@ def rate_limited(ip: str) -> bool:
         if len(q) >= RATE_LIMIT:
             return True
         q.append(now)
-        if len(_hits) > 5000:  # keep the dict from growing forever
+        if len(_hits) > 500:  # keep the dict from growing forever
             for k in [k for k, v in _hits.items() if not v]:
                 _hits.pop(k, None)
         return False
